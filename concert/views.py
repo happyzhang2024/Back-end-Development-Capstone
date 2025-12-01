@@ -38,11 +38,13 @@ def index(request):
 
 
 def songs(request):
-    songs = {"songs":[{"id":1,"title":"duis faucibus accumsan odio curabitur convallis","lyrics":"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."}]}
+    # songs = {"songs":[{"id":1,"title":"duis faucibus accumsan odio curabitur convallis","lyrics":"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."}]}
+    songs = req.get("SONGS_URL/song").json()
     return render(request, "songs.html", {"songs": songs["songs"]})
     # pass
 
 def photos(request):
+    """
     photos = [{
         "id": 1,
         "pic_url": "http://dummyimage.com/136x100.png/5fa2dd/ffffff",
@@ -51,6 +53,8 @@ def photos(request):
         "event_city": "Washington",
         "event_date": "11/16/2022"
     }]
+    """
+    photos = req.get("PHOTO_URL/picture").json()
     return render(request, "photos.html", {"photos": photos})
     # pass
 
