@@ -19,11 +19,26 @@ spec:
       labels:
         run: djangoserver
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault    
       containers:
-      - image: us.icr.io/$MY_NAMESPACE/djangoserver:1
+      - image: us.icr.io/sn-labs-terryzhang05/djangoserver:3
         imagePullPolicy: Always
         name: djangoserver
         ports:
         - containerPort: 8000
           protocol: TCP
+        env:
+        - name: SONGS_URL
+          value: http://songs-sn-labs-terryzhang05.labs-prod-openshift-san-a45631dc5778dc6371c67d206ba9ae5c-0000.us-east.containers.appdomain.cloud
+        - name: PHOTO_URL
+          value: https://pictures.23f1k4a5mqmx.us-south.codeengine.appdomain.cloud
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL 
       restartPolicy: Always

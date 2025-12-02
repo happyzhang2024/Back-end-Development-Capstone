@@ -8,15 +8,20 @@ from django.contrib.auth.hashers import make_password
 
 from concert.forms import LoginForm, SignUpForm
 from concert.models import Concert, ConcertAttending
+# import os
 import requests as req
 
 
 # Create your views here.
+# SONGS_URL = os.environ.get("SONGS_URL")
+# PHOTO_URL = os.environ.get("PHOTO_URL")
+SONGS_URL = "http://songs-sn-labs-terryzhang05.labs-prod-openshift-san-a45631dc5778dc6371c67d206ba9ae5c-0000.us-east.containers.appdomain.cloud"
+PHOTO_URL = "https://pictures.23f1k4a5mqmx.us-south.codeengine.appdomain.cloud"
 
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")
-        passowrd = request.POST.get("password")
+        password = request.POST.get("password")
         try:
             user = User.objects.filter(username=username).first()
 
@@ -39,7 +44,10 @@ def index(request):
 
 def songs(request):
     # songs = {"songs":[{"id":1,"title":"duis faucibus accumsan odio curabitur convallis","lyrics":"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."}]}
-    songs = req.get("SONGS_URL/song").json()
+    if not SONGS_URL:
+        return HttpResponse("SONGS_URL is not configured", status=500)
+
+    songs = req.get(f"{SONGS_URL}/songs").json()
     return render(request, "songs.html", {"songs": songs["songs"]})
     # pass
 
@@ -54,7 +62,10 @@ def photos(request):
         "event_date": "11/16/2022"
     }]
     """
-    photos = req.get("PHOTO_URL/picture").json()
+    if not PHOTO_URL:
+        return HttpResponse("PHOTO_URL is not configured", status=500)
+
+    photos = req.get(f"{PHOTO_URL}/picture").json()
     return render(request, "photos.html", {"photos": photos})
     # pass
 
